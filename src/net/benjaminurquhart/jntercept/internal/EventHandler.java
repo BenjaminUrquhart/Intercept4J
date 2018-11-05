@@ -49,6 +49,7 @@ public class EventHandler extends Thread{
 		Event event = new Event(json, client); 
 		switch(json.getString("event")) {
 		case "chat": event = new ChatMessageReceivedEvent(json, client); break;
+		case "error" : event = new ErrorEvent(json, client);  break;
 		case "connect": event = new ReadyEvent(json, client);  break;
 		case "command": event = new CommandEvent(json, client);  break;
 		case "connected": event = new RemoteConnectionEvent(json, client);  break;
