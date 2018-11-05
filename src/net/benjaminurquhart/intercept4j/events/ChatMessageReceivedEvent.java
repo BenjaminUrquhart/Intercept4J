@@ -19,8 +19,12 @@ public class ChatMessageReceivedEvent extends Event {
 		return this.chatroom;
 	}
 	public String getUser() {
-		String user = super.getJSON().getString("msg").split(" ")[1];
+		String user = super.getMessage().split(" ")[1];
 		user = user.substring(0, user.length() - 1);
 		return user;
+	}
+	@Override
+	public String getMessage() {
+		return super.getMessage().split(" ", 3)[2];
 	}
 }

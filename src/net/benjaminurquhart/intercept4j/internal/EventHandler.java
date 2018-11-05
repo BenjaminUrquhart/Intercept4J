@@ -49,12 +49,12 @@ public class EventHandler extends Thread{
 		Logger.debug(json.toString());
 		Event event = new Event(json, client); 
 		switch(json.getString("event")) {
-		case "chat": event = new ChatMessageReceivedEvent(json, client);
-		case "connect": event = new ReadyEvent(json, client); 
-		case "command": event = new CommandEvent(json, client);
-		case "connected": event = new RemoteConnectionEvent(json, client);
-		case "broadcast": event = new BroadcastEvent(json,  client);
-		default: Logger.warn("Unknown event: " + json);
+		case "chat": event = new ChatMessageReceivedEvent(json, client); break;
+		case "connect": event = new ReadyEvent(json, client);  break;
+		case "command": event = new CommandEvent(json, client);  break;
+		case "connected": event = new RemoteConnectionEvent(json, client);  break;
+		case "broadcast": event = new BroadcastEvent(json,  client);  break;
+		default: Logger.warn("Unknown event: " + json);  break;
 		}
 		for(Listener listener : client.getEventListeners()) {
 			listener.onEvent(event);
