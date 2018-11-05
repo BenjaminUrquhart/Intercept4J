@@ -15,7 +15,7 @@ import net.benjaminurquhart.jntercept.utils.Logger;
 import javax.security.auth.login.*;
 
 public class Requester {
-
+	
 	private Socket conn;
 	private BufferedReader input;
 	private PrintWriter output;
@@ -24,11 +24,15 @@ public class Requester {
 	
 	private EventHandler handler;
 	
+	private static int requestsLeft = 5;
+	private RateLimitThread rateLimitThread;
+	
 	public Requester(Jntercept client) throws Exception{
 		conn = new Socket(client.getIP(), client.getPort());
 		input = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		output = new PrintWriter(conn.getOutputStream());
 		clientInfo = new JSONObject(input.readLine());
+		rateLimitThread = new RateLimitThread(this);
 		Logger.info("Connected to websocket.");
 		Logger.debug(clientInfo.toString());
 		JSONObject json = new JSONObject();
@@ -66,8 +70,21 @@ public class Requester {
 		EventHandler.handleEvent(json); //This runs all the listeners that override onReady();
 		this.handler.start();
 	}
+	protected void resetRequests(){
+		requestsLeft = 5;
+	}
 	public void send(JSONObject json){
 		try {
+			if(!rateLimitThread.didStart()){
+				rateLimitThread.start();
+			}
+			while(requestsLeft <= 0){
+				try{
+					Thread.sleep(100);
+				}
+				catch(Exception e){}
+			}
+			requestsLeft--;
 			Logger.debug(json.toString());
 			output.println(json);
 			output.flush();

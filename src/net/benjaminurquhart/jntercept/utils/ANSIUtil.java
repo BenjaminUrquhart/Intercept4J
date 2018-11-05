@@ -39,6 +39,9 @@ public class ANSIUtil {
 	private static String addColors(String[] strings){
 		String out = "";
 		for(int i = 1; i < strings.length; i++){
+			if(strings[i].length() == 0){
+				continue;
+			}
 			if(ANSI){
 				out += String.format(BODY, getColorCode(strings[i].substring(0, 1))) + strings[i].substring(1);
 			}
