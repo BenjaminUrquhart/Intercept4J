@@ -1,7 +1,7 @@
 package net.benjaminurquhart.jntercept.internal;
 
 public class RateLimitThread extends Thread {
-
+	
 	private Requester requester;
 	private boolean started = false;
 	

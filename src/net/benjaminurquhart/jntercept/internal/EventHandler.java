@@ -1,6 +1,7 @@
 package net.benjaminurquhart.jntercept.internal;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 
 import org.json.JSONObject;
 
@@ -37,6 +38,9 @@ public class EventHandler extends Thread{
 				else {
 					handleEvent(new JSONObject(line));
 				}
+			}
+			catch(IOException e){
+				return;
 			}
 			catch(Exception e) {
 				System.err.println("An exception occured!");

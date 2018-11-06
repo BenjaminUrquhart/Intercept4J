@@ -9,6 +9,7 @@ import java.net.Socket;
 import org.json.JSONObject;
 
 import net.benjaminurquhart.jntercept.Jntercept;
+import net.benjaminurquhart.jntercept.enums.AccountType;
 import net.benjaminurquhart.jntercept.utils.Checks;
 import net.benjaminurquhart.jntercept.utils.Logger;
 
@@ -24,10 +25,14 @@ public class Requester {
 	
 	private EventHandler handler;
 	
+	private AccountType type;
+	
 	private static int requestsLeft = 5;
+	private static long canSendAfter = System.currentTimeMillis();
 	private RateLimitThread rateLimitThread;
 	
 	public Requester(Jntercept client) throws Exception{
+		type = client.getAccountType();
 		conn = new Socket(client.getIP(), client.getPort());
 		input = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		output = new PrintWriter(conn.getOutputStream());
@@ -75,16 +80,27 @@ public class Requester {
 	}
 	public synchronized void send(JSONObject json){
 		try {
-			if(!rateLimitThread.didStart()){
-				rateLimitThread.start();
-			}
-			while(requestsLeft <= 0){
-				try{
-					Thread.sleep(100);
+			if(type.equals(AccountType.CLIENT)){
+				if(!rateLimitThread.didStart()){
+					rateLimitThread.start();
 				}
-				catch(Exception e){}
+				while(requestsLeft <= 0){
+					try{
+						Thread.sleep(100);
+					}
+					catch(Exception e){}
+				}
+				requestsLeft--;
 			}
-			requestsLeft--;
+			else{
+				while(canSendAfter - System.currentTimeMillis() > 0){
+					try{
+						Thread.sleep(10);
+					}
+					catch(Exception e){}
+				}
+				canSendAfter = System.currentTimeMillis() + (50L * (json.has("cmd") ? json.getString("cmd").length() : 0));
+			}
 			Logger.debug(json.toString());
 			output.println(json);
 			output.flush();

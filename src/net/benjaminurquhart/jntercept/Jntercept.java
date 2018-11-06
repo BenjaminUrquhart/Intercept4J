@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import net.benjaminurquhart.jntercept.enums.AccountType;
 import net.benjaminurquhart.jntercept.internal.CommandHandler;
 import net.benjaminurquhart.jntercept.internal.Requester;
 import net.benjaminurquhart.jntercept.listeners.Listener;
@@ -22,13 +23,19 @@ public class Jntercept {
 	
 	private Requester requester;
 	
+	private AccountType type;
+	
 	private boolean built;
 	private boolean stopped;
 	
 	public Jntercept(String username, String password) {
+		this(username, password, AccountType.BOT);
+	}
+	public Jntercept(String username, String password, AccountType type){
 		this.username = username;
 		this.password = password;
 		this.listeners = new ArrayList<>();
+		this.type = type;
 		this.built = false;
 		this.stopped = false;
 	}
@@ -70,6 +77,9 @@ public class Jntercept {
 	}
 	public String getPassword() {
 		return this.password;
+	}
+	public AccountType getAccountType(){
+		return this.type;
 	}
 	public List<Listener> getEventListeners(){
 		return Collections.unmodifiableList(listeners);
