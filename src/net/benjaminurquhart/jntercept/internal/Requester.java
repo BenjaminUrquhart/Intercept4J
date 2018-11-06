@@ -73,7 +73,7 @@ public class Requester {
 	protected void resetRequests(){
 		requestsLeft = 5;
 	}
-	public void send(JSONObject json){
+	public synchronized void send(JSONObject json){
 		try {
 			if(!rateLimitThread.didStart()){
 				rateLimitThread.start();
