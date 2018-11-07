@@ -26,6 +26,7 @@ public class EventHandler extends Thread{
 		while(!interrupted()) {
 			try {
 				String line = input.readLine();
+				Logger.debug(line);
 				if(line == null) {
 					if(client.isHalted()) {
 						System.exit(0);
@@ -51,7 +52,6 @@ public class EventHandler extends Thread{
 		}
 	}
 	public static void handleEvent(JSONObject json) {
-		Logger.debug(json.toString());
 		if(!json.has("event")){
 			Logger.warn("Received event with no event field! Assuming we hit a rate-limit.");
 			json.put("event", "error");

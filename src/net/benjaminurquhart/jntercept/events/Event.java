@@ -27,7 +27,7 @@ public class Event {
 	public String getMessage() {
 		String msg = null;
 		if(json.has("msg")) {
-			msg = json.getString("msg").replace("\u200b", " ");
+			msg = json.getString("msg").replace("\u200b", " ").replace("\t", " ");
 			if(System.getProperty("os.name").startsWith("Windows")) {
 				msg = msg.replace("\u00C2", "");
 			}

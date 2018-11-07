@@ -8,6 +8,7 @@ import java.util.List;
 import net.benjaminurquhart.jntercept.enums.AccountType;
 import net.benjaminurquhart.jntercept.internal.CommandHandler;
 import net.benjaminurquhart.jntercept.internal.Requester;
+import net.benjaminurquhart.jntercept.internal.ShutdownHook;
 import net.benjaminurquhart.jntercept.listeners.Listener;
 import net.benjaminurquhart.jntercept.utils.Logger;
 
@@ -22,6 +23,7 @@ public class Jntercept {
 	private ArrayList<Listener> listeners;
 	
 	private Requester requester;
+	private ShutdownHook shutdownHook;
 	
 	private AccountType type;
 	
@@ -38,6 +40,7 @@ public class Jntercept {
 		this.type = type;
 		this.built = false;
 		this.stopped = false;
+		this.shutdownHook = new ShutdownHook(this);
 	}
 	public Logger getLogger() {
 		return new Logger();
@@ -89,6 +92,7 @@ public class Jntercept {
 			return this;
 		}
 		Logger.info("Building...");
+		Runtime.getRuntime().addShutdownHook(shutdownHook);
 		this.requester = new Requester(this);
 		this.built = true;
 		this.stopped = false;
