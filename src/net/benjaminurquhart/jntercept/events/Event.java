@@ -18,16 +18,10 @@ public class Event {
 	public JSONObject getJSON() {
 		return this.json;
 	}
-	public boolean isRateLimitEvent() {
-		return json.has("error") && !json.has("event");
-	}
 	public boolean wasSuccessful() {
 		return Checks.success(json);
 	}
 	public String getEventType() {
-		if(this.isRateLimitEvent()) {
-			return "ratelimit";
-		}
 		return json.getString("event");
 	}
 	public String getMessage() {

@@ -19,10 +19,13 @@ public class RateLimitThread extends Thread {
 	}
 	@Override
 	public void run(){
-		while(true){
+		while(!interrupted()){
 			try{
 				Thread.sleep(5000);
 				requester.resetRequests();
+			}
+			catch(InterruptedException e){
+				return;
 			}
 			catch(Exception e){
 				e.printStackTrace();

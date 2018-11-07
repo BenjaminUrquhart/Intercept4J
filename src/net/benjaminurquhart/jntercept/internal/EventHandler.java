@@ -23,7 +23,7 @@ public class EventHandler extends Thread{
 	
 	@Override
 	public void run() {
-		while(true) {
+		while(!interrupted()) {
 			try {
 				String line = input.readLine();
 				if(line == null) {
@@ -36,20 +36,26 @@ public class EventHandler extends Thread{
 					}
 				}
 				else {
-					handleEvent(new JSONObject(line));
+					try{
+						handleEvent(new JSONObject(line));
+					}
+					catch(Exception e){
+						System.err.println("An exception occured!");
+						e.printStackTrace();
+					}
 				}
 			}
 			catch(IOException e){
-				return;
-			}
-			catch(Exception e) {
-				System.err.println("An exception occured!");
-				e.printStackTrace();
+				this.interrupt();
 			}
 		}
 	}
 	public static void handleEvent(JSONObject json) {
 		Logger.debug(json.toString());
+		if(!json.has("event")){
+			Logger.warn("Received event with no event field! Assuming we hit a rate-limit.");
+			json.put("event", "error");
+		}
 		Event event = new Event(json, client); 
 		switch(json.getString("event")) {
 		case "chat": event = new ChatMessageReceivedEvent(json, client); break;

@@ -113,6 +113,8 @@ public class Requester {
 	public void stop() {
 		try {
 			Logger.info("Stopping...");
+			this.rateLimitThread.interrupt();
+			this.handler.interrupt();
 			this.output.close();
 			this.input.close();
 			this.conn.close();
