@@ -91,7 +91,15 @@ public class Requester {
 				while(canSendAfter - System.currentTimeMillis() > 0){}
 				canSendAfter = System.currentTimeMillis() + (50L * (json.has("cmd") ? json.getString("cmd").length() : 0));
 			}
-			Logger.debug(json.toString());
+			if(json.has("login")) {
+				JSONObject censored = new JSONObject(json.toString());
+				JSONObject tmp = censored.getJSONObject("login");
+				censored.put("login", tmp.put("password", "[CENSORED]"));
+				Logger.debug(censored.toString());
+			}
+			else {
+				Logger.debug(json.toString());
+			}
 			output.println(json);
 			output.flush();
 		}
