@@ -55,6 +55,12 @@ public class Jntercept {
 	public Jntercept addEventListeners(Listener... listeners) {
 		return this.addEventListeners(Arrays.asList(listeners));
 	}
+	public void removeEventListeners(Listener... listeners) {
+		this.removeEventListeners(Arrays.asList(listeners));
+	}
+	public void removeEventListeners(List<Listener> listeners) {
+		this.listeners.removeAll(listeners);
+	}
 	public Jntercept setIP(String ip) {
 		if(built){
 			throw new IllegalStateException("Cannot set IP after the client is built!");
