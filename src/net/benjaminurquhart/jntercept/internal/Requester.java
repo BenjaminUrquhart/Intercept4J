@@ -34,7 +34,7 @@ public class Requester {
 	public Requester(Jntercept client) throws Exception{
 		type = client.getAccountType();
 		conn = new Socket(client.getIP(), client.getPort());
-		input = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		input = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 		output = new PrintWriter(conn.getOutputStream());
 		clientInfo = new JSONObject(input.readLine());
 		rateLimitThread = new RateLimitThread(this);
@@ -84,28 +84,21 @@ public class Requester {
 				if(!rateLimitThread.didStart()){
 					rateLimitThread.start();
 				}
-				while(requestsLeft <= 0){
-					try{
-						Thread.sleep(100);
-					}
-					catch(Exception e){}
-				}
+				while(requestsLeft <= 0){}
 				requestsLeft--;
 			}
 			else{
-				while(canSendAfter - System.currentTimeMillis() > 0){
-					try{
-						Thread.sleep(10);
-					}
-					catch(Exception e){}
-				}
+				while(canSendAfter - System.currentTimeMillis() > 0){}
 				canSendAfter = System.currentTimeMillis() + (50L * (json.has("cmd") ? json.getString("cmd").length() : 0));
 			}
 			Logger.debug(json.toString());
 			output.println(json);
 			output.flush();
 		}
-		catch(Exception e) {}
+		catch(Exception e) {
+			Logger.error("An exception occured while sending data to the server!");
+			e.printStackTrace();
+		}
 	}
 	public JSONObject getConnectionInfo() {
 		return this.clientInfo;
