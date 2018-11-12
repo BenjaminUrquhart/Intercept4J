@@ -30,6 +30,8 @@ public class Requester {
 	private static int requestsLeft = 5;
 	private static long canSendAfter = System.currentTimeMillis();
 	private RateLimitThread rateLimitThread;
+	private QueueThread queueThread;
+	private Queue queueHandler;
 	
 	public Requester(Jntercept client) throws Exception{
 		type = client.getAccountType();
@@ -38,6 +40,8 @@ public class Requester {
 		output = new PrintWriter(conn.getOutputStream());
 		clientInfo = new JSONObject(input.readLine());
 		rateLimitThread = new RateLimitThread(this);
+		queueThread = new QueueThread(this);
+		queueHandler = new Queue();
 		Logger.info("Connected to websocket.");
 		Logger.debug(clientInfo.toString());
 		JSONObject json = new JSONObject();
@@ -74,11 +78,19 @@ public class Requester {
 		this.handler = new EventHandler(input, client);
 		EventHandler.handleEvent(json); //This runs all the listeners that override onReady();
 		this.handler.start();
+		this.queueThread.start();
+	}
+	protected Queue getQueue() {
+		return this.queueHandler;
 	}
 	protected void resetRequests(){
 		requestsLeft = 5;
 	}
 	public synchronized void send(JSONObject json){
+		if(json == null) {
+			Logger.warn("A null JSONObject was passed to the send method!");
+			return;
+		}
 		try {
 			if(type.equals(AccountType.CLIENT)){
 				if(!rateLimitThread.didStart()){
@@ -115,6 +127,7 @@ public class Requester {
 		try {
 			Logger.info("Stopping...");
 			this.rateLimitThread.interrupt();
+			this.queueThread.interrupt();
 			this.handler.interrupt();
 			this.output.close();
 			this.input.close();

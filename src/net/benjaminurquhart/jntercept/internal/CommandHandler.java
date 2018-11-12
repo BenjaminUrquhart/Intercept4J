@@ -26,6 +26,6 @@ public class CommandHandler {
 		JSONObject request = new JSONObject();
 		request.put("request", "command");
 		request.put("cmd", cmd.trim());
-		client.getRequester().send(request);
+		client.getRequester().getQueue().queue(request);
 	}
 }
