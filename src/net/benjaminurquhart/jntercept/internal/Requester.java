@@ -86,7 +86,7 @@ public class Requester {
 	protected void resetRequests(){
 		requestsLeft = 5;
 	}
-	public synchronized void send(JSONObject json){
+	protected synchronized void send(JSONObject json){
 		if(json == null) {
 			Logger.warn("A null JSONObject was passed to the send method!");
 			return;

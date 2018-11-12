@@ -2,15 +2,14 @@ package net.benjaminurquhart.jntercept.internal;
 
 import org.json.JSONObject;
 
-import net.benjaminurquhart.jntercept.Jntercept;
 import net.benjaminurquhart.jntercept.enums.Command;
 
 public class CommandHandler {
 
-	private static Jntercept client = null;
+	private Requester requester = null;
 	
-	public static void setClient(Jntercept client) {
-		CommandHandler.client = client;
+	public CommandHandler(Requester requester) {
+		this.requester = requester;
 	}
 	public void runCommand(Command cmd, String... args){
 		String arg = "";
@@ -26,6 +25,6 @@ public class CommandHandler {
 		JSONObject request = new JSONObject();
 		request.put("request", "command");
 		request.put("cmd", cmd.trim());
-		client.getRequester().getQueue().queue(request);
+		requester.getQueue().queue(request);
 	}
 }

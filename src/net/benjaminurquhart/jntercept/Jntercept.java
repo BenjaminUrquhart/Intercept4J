@@ -24,6 +24,7 @@ public class Jntercept {
 	
 	private Requester requester;
 	private ShutdownHook shutdownHook;
+	private CommandHandler cmdHandler;
 	
 	private AccountType type;
 	
@@ -46,7 +47,7 @@ public class Jntercept {
 		return new Logger();
 	}
 	public CommandHandler getCommandHandler() {
-		return new CommandHandler();
+		return cmdHandler;
 	}
 	public Jntercept addEventListeners(List<? extends Listener> listeners) {
 		this.listeners.addAll(listeners);
@@ -100,14 +101,11 @@ public class Jntercept {
 		Logger.info("Building...");
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
 		this.requester = new Requester(this);
+		this.cmdHandler = new CommandHandler(this.requester);
 		this.built = true;
 		this.stopped = false;
 		Logger.info("Ready.");
-		CommandHandler.setClient(this);
 		return this;
-	}
-	public Requester getRequester() {
-		return this.requester;
 	}
 	public boolean isHalted() {
 		return this.stopped;
