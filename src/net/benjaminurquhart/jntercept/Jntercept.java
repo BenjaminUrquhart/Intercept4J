@@ -1,9 +1,13 @@
 package net.benjaminurquhart.jntercept;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import javax.security.auth.login.LoginException;
 
 import net.benjaminurquhart.jntercept.enums.AccountType;
 import net.benjaminurquhart.jntercept.internal.CommandHandler;
@@ -24,6 +28,7 @@ public class Jntercept {
 	
 	private Requester requester;
 	private ShutdownHook shutdownHook;
+	private CommandHandler cmdHandler;
 	
 	private AccountType type;
 	
@@ -46,7 +51,7 @@ public class Jntercept {
 		return new Logger();
 	}
 	public CommandHandler getCommandHandler() {
-		return new CommandHandler();
+		return cmdHandler;
 	}
 	public Jntercept addEventListeners(List<? extends Listener> listeners) {
 		this.listeners.addAll(listeners);
@@ -93,21 +98,18 @@ public class Jntercept {
 	public List<Listener> getEventListeners(){
 		return Collections.unmodifiableList(listeners);
 	}
-	public Jntercept build() throws Exception{
+	public Jntercept build() throws LoginException, UnknownHostException, IOException{
 		if(built && !stopped){
 			return this;
 		}
 		Logger.info("Building...");
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
 		this.requester = new Requester(this);
+		this.cmdHandler = new CommandHandler(this.requester);
 		this.built = true;
 		this.stopped = false;
 		Logger.info("Ready.");
-		CommandHandler.setClient(this);
 		return this;
-	}
-	public Requester getRequester() {
-		return this.requester;
 	}
 	public boolean isHalted() {
 		return this.stopped;

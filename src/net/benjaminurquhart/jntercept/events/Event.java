@@ -38,6 +38,6 @@ public class Event {
 		return this.client;
 	}
 	public CommandHandler getCommandHandler() {
-		return new CommandHandler();
+		return this.client.getCommandHandler();
 	}
 }
