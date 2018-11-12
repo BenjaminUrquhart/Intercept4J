@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import org.json.JSONObject;
 
@@ -27,13 +28,13 @@ public class Requester {
 	
 	private AccountType type;
 	
-	private static int requestsLeft = 5;
-	private static long canSendAfter = System.currentTimeMillis();
+	private int requestsLeft = 5;
+	private long canSendAfter = System.currentTimeMillis();
 	private RateLimitThread rateLimitThread;
 	private QueueThread queueThread;
 	private Queue queueHandler;
 	
-	public Requester(Jntercept client) throws Exception{
+	public Requester(Jntercept client) throws LoginException, UnknownHostException, IOException{
 		type = client.getAccountType();
 		conn = new Socket(client.getIP(), client.getPort());
 		input = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));

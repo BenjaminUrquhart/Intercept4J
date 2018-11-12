@@ -1,9 +1,13 @@
 package net.benjaminurquhart.jntercept;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import javax.security.auth.login.LoginException;
 
 import net.benjaminurquhart.jntercept.enums.AccountType;
 import net.benjaminurquhart.jntercept.internal.CommandHandler;
@@ -94,7 +98,7 @@ public class Jntercept {
 	public List<Listener> getEventListeners(){
 		return Collections.unmodifiableList(listeners);
 	}
-	public Jntercept build() throws Exception{
+	public Jntercept build() throws LoginException, UnknownHostException, IOException{
 		if(built && !stopped){
 			return this;
 		}
