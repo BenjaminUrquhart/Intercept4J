@@ -16,5 +16,5 @@ public class ANSI {
 	public static final String CLEAR_LINE = "\u001b[2K";
 	public static final String CLEAR_SCREEN = "\u001b[2J";
 	public static final String RESET_CURSOR = "\u001b[1000D";
-	public static final String RESET_STR = String.format(BODY, RESET);
+	public static final String RESET_STR = RESET; //Backwards compatibility
 }

@@ -2,6 +2,7 @@ package net.benjaminurquhart.jntercept.utils;
 
 public enum BubColor {
 	
+	RESET(ANSI.SPLIT + "*"),
 	GRAY(ANSI.SPLIT + "W"),
 	WHITE(ANSI.SPLIT + "w"),
 	RED(ANSI.SPLIT + "R"),
@@ -15,7 +16,7 @@ public enum BubColor {
 	PINK(ANSI.SPLIT + "P"),
 	LIGHT_PINK(ANSI.SPLIT + "p"),
 	VIOLET(ANSI.SPLIT + "V"),
-	LIGHT_VIOLET(ANSI.SPLIT + "V");
+	LIGHT_VIOLET(ANSI.SPLIT + "v");
 	
 	private final String color;
 	
@@ -56,6 +57,8 @@ public enum BubColor {
 			return ANSI.WHITE;
 		case YELLOW:
 			return ANSI.YELLOW;
+		case RESET:
+			return ANSI.RESET_STR;
 		default:
 			return null;
 		}
