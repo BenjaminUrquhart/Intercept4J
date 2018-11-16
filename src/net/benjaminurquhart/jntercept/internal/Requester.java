@@ -102,7 +102,7 @@ public class Requester {
 			}
 			else{
 				while(canSendAfter - System.currentTimeMillis() > 0){}
-				canSendAfter = System.currentTimeMillis() + (50L * (json.has("cmd") ? json.getString("cmd").length() : 0));
+				canSendAfter = System.currentTimeMillis() + (50L * (json.has("cmd") ? json.getString("cmd").length() : 1));
 			}
 			if(json.has("login")) {
 				JSONObject censored = new JSONObject(json.toString());
