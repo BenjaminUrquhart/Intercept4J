@@ -1,4 +1,3 @@
-
 package net.benjaminurquhart.jntercept.utils;
 
 public class ColorUtil extends ANSI{
