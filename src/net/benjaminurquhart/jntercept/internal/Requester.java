@@ -35,6 +35,10 @@ public class Requester {
 	private Queue queueHandler;
 	
 	public Requester(Jntercept client) throws LoginException, UnknownHostException, IOException{
+		Thread.setDefaultUncaughtExceptionHandler((thread, e) -> {
+			Logger.error("A thread threw an uncaught exception. Thread: " + thread.getName());
+			e.printStackTrace();
+		});
 		type = client.getAccountType();
 		conn = new Socket(client.getIP(), client.getPort());
 		input = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
@@ -87,9 +91,13 @@ public class Requester {
 	protected void resetRequests(){
 		requestsLeft = 5;
 	}
-	protected synchronized void send(JSONObject json){
+	protected synchronized void send(QueuedAction action) {
+		this.handler.addCallback(action.getCallback());
+		this.send(action.getJSON());
+	}
+	private synchronized void send(JSONObject json){
 		if(json == null) {
-			Logger.warn("A null JSONObject was passed to the send method!");
+			Logger.warn("A null queue was passed to the send method!");
 			return;
 		}
 		try {

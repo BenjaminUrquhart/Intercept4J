@@ -16,7 +16,8 @@ public enum BubColor {
 	PINK(ANSI.SPLIT + "P"),
 	LIGHT_PINK(ANSI.SPLIT + "p"),
 	VIOLET(ANSI.SPLIT + "V"),
-	LIGHT_VIOLET(ANSI.SPLIT + "v");
+	LIGHT_VIOLET(ANSI.SPLIT + "v"),
+	UNKNOWN(ANSI.SPLIT + "?");
 	
 	private final String color;
 	
@@ -60,7 +61,7 @@ public enum BubColor {
 		case RESET:
 			return ANSI.RESET_STR;
 		default:
-			return null;
+			return "";
 		}
 	}
 }

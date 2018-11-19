@@ -1,3 +1,4 @@
+
 package net.benjaminurquhart.jntercept.utils;
 
 public class ColorUtil extends ANSI{
@@ -10,5 +11,8 @@ public class ColorUtil extends ANSI{
 			text = text.replace(color.toString(), color.toANSI());
 		}
 		return text;
+	}
+	public static String replaceWeirdPeriod(String text) {
+		return text.replace(BubColor.UNKNOWN + ".", "");
 	}
 }
