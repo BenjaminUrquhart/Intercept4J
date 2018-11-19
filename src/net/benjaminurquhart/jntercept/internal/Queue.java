@@ -1,26 +1,32 @@
 package net.benjaminurquhart.jntercept.internal;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import org.json.JSONObject;
 
+import net.benjaminurquhart.jntercept.events.Event;
+
 public class Queue {
 
-	private ArrayList<JSONObject> queue;
+	private ArrayList<QueuedAction> queue;
 	
 	protected Queue() {
 		this.queue = new ArrayList<>();
 	}
 	public synchronized void queue(JSONObject json) {
-		queue.add(json);
+		this.queue(json, c -> {});
 	}
-	protected synchronized void dequeue(JSONObject json) {
-		queue.remove(json);
+	public synchronized void queue(JSONObject json, Consumer<Event> callback) {
+		queue.add(QueuedAction.build(json, callback));
+	}
+	protected synchronized void dequeue(QueuedAction action) {
+		queue.remove(action);
 	}
 	protected boolean hasNext() {
 		return this.queue.size() > 0;
 	}
-	protected synchronized JSONObject getLatest() {
+	protected synchronized QueuedAction getLatest() {
 		if(!this.hasNext()) {
 			return null;
 		}

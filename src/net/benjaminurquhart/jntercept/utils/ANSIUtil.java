@@ -1,5 +1,6 @@
 package net.benjaminurquhart.jntercept.utils;
 
+@Deprecated
 public class ANSIUtil {
 	
 	public static final String BODY = "\u001b[%sm";
